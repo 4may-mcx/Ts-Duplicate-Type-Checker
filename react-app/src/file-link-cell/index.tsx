@@ -13,6 +13,10 @@ const OccurrenceContainer = styled.div`
   margin: 5px 0;
 `;
 
+const FileNameContainer = styled.span`
+  font-weight: bold;
+`;
+
 const FileLink = styled.span`
   cursor: pointer;
   white-space: nowrap;
@@ -41,10 +45,10 @@ export const FileLinkCell = ({
 
   return (
     <Container>
-      <div>发现重复类型: {record.typeSignature}</div>
+      <div>重复类型: {record.typeSignature}</div>
       {record.occurrences.map((occurrence, index) => (
         <OccurrenceContainer key={index}>
-          <span>{occurrence.name}: </span>
+          <FileNameContainer>{occurrence.name}: </FileNameContainer>
           <FileLink onClick={() => openFileInVscode(occurrence.file)}>
             {occurrence.file}
           </FileLink>
