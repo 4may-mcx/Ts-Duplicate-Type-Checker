@@ -97,7 +97,9 @@ function compareObjects(
 ): boolean {
   const keys1 = Object.keys(obj1).sort();
   const keys2 = Object.keys(obj2).sort();
-  if (keys1.length !== keys2.length) return false;
+  if (keys1.length !== keys2.length) {
+    return false;
+  }
 
   return keys1.every(
     (key, index) => key === keys2[index] && obj1[key] === obj2[key]
@@ -106,7 +108,9 @@ function compareObjects(
 
 // 比较两个字符串数组是否相同
 function compareArrays(arr1: string[], arr2: string[]): boolean {
-  if (arr1.length !== arr2.length) return false;
+  if (arr1.length !== arr2.length) {
+    return false;
+  }
   const sorted1 = arr1.slice().sort();
   const sorted2 = arr2.slice().sort();
 
@@ -199,7 +203,7 @@ function findDuplicateTypes(dirPath: string) {
   return duplicates;
 }
 
-export default function () {
+export default function getTypeCheckResult() {
   const targetDir = path.join(
     path.dirname(__dirname),
     "src/type-checker/test-types"
@@ -207,6 +211,7 @@ export default function () {
 
   const duplicates = findDuplicateTypes(targetDir);
 
+  return duplicates;
   if (duplicates.length > 0) {
     duplicates.forEach((duplicate) => {
       console.log(`发现重复类型: ${duplicate.typeSignature}`);

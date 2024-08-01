@@ -4,7 +4,7 @@
     "target": "ES2022",
     "lib": ["ES2022", "dom"],
     "sourceMap": true,
-    "rootDir": "./src",
+    "rootDir": ".",
     "outDir": "./dist",
     "strict": true,
     "jsx": "react-jsx",
@@ -16,6 +16,6 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "global.d.ts", "react-app/src/**/*"],
   "exclude": ["node_modules", "dist"]
 }

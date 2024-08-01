@@ -1,15 +1,29 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
+import { DuplicateTypeMessage } from "../../types/message";
+import { FileLinkCell } from "./file-link-cell";
 
 const App = () => {
-  console.log("hello React");
-  const [count, setCount] = useState(0);
+  const [fileList, setFileList] = useState<DuplicateTypeMessage>();
+
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent<DuplicateTypeMessage>) => {
+      setFileList(event.data);
+    };
+
+    window.addEventListener("message", handleMessage);
+
+    return () => {
+      window.removeEventListener("message", handleMessage);
+    };
+  }, []);
+
   return (
     <div>
-      <h1>Hello React!!!! {count}</h1>
       <div style={{ padding: "20px" }}>
-        <input style={{ backgroundColor: "rgba(0, 0, 0, 0.2)" }} type="text" />
-        <button onClick={() => setCount((i) => i + 3)}>提交</button>
+        {fileList?.map((item) => (
+          <FileLinkCell record={item} />
+        ))}
       </div>
     </div>
   );

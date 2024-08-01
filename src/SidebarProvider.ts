@@ -1,4 +1,6 @@
 import * as vscode from "vscode";
+import { DuplicateTypeMessage } from "../types/message";
+import getTypeCheckResult from "./type-checker";
 
 export class SidebarProvider implements vscode.WebviewViewProvider {
   private _view?: vscode.WebviewView;
@@ -17,15 +19,29 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
       localResourceRoots: [this._extensionUri],
     };
 
-    webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
-
-    webviewView.webview.onDidReceiveMessage((data) => {
-      switch (data.type) {
-        case "input":
-          vscode.window.showInformationMessage(`你输入了: ${data.value}`);
+    webviewView.webview.onDidReceiveMessage((message) => {
+      switch (message.command) {
+        case "openFile":
+          const uri = vscode.Uri.file(message.filePath);
+          vscode.commands.executeCommand("vscode.open", uri);
           break;
       }
     });
+
+    webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
+
+    // todo@xmc: 补充获取路径的逻辑
+
+    // 每次切换回来时都重新发送数据到 Webview
+    this._view.onDidChangeVisibility(() => {
+      this._view?.visible && this.sendCheckerResultToWebview();
+    });
+    this.sendCheckerResultToWebview();
+  }
+
+  private sendCheckerResultToWebview() {
+    const data = getTypeCheckResult();
+    this._view?.webview.postMessage(data);
   }
 
   private _getHtmlForWebview(webview: vscode.Webview): string {
